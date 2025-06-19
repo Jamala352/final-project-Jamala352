@@ -1,0 +1,116 @@
+echo "# final-project-Jamala352" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Clark-State-College-BAT-Division/final-project-Jamala352.git
+git push -u origin main
+
+import random
+import math
+
+# Initial values
+acres = 200
+people = 20
+wheat = 1000
+rounds = 10
+total_starved = 0
+
+for year in range(1, rounds + 1):
+    print(f"\n--- Year {year} ---")
+    land_price = random.randint(17, 26)
+    harvest_rate = random.randint(1, 4)
+    
+    print(f"Population: {people}")
+    print(f"Land: {acres} acres")
+    print(f"Wheat: {wheat} bushels")
+    print(f"Land is worth {land_price} bushels per acre")
+
+    # Land transaction
+    while True:
+        try:
+            land_transaction = int(input("Enter acres to buy (positive) or sell (negative): "))
+            if land_transaction > 0 and wheat >= land_transaction * land_price:
+                acres += land_transaction
+                wheat -= land_transaction * land_price
+                break
+            elif land_transaction < 0 and abs(land_transaction) <= acres:
+                acres += land_transaction
+                wheat -= land_transaction * land_price  # Selling gives wheat
+                break
+            elif land_transaction == 0:
+                break
+        except:
+            pass
+        print("Invalid amount.")
+
+    # Farming step
+    max_farmable = min(acres, people * 10, wheat)
+    while True:
+        try:
+            acres_to_farm = int(input(f"Enter acres to farm (max {max_farmable}): "))
+            if 0 <= acres_to_farm <= max_farmable:
+                wheat -= acres_to_farm
+                break
+        except:
+            pass
+        print("Invalid amount.")
+
+    # Food distribution
+    while True:
+        try:
+            food_to_give = int(input(f"How much wheat to feed the people (max {wheat}): "))
+            if 0 <= food_to_give <= wheat:
+                wheat -= food_to_give
+                break
+        except:
+            pass
+        print("Invalid amount.")
+
+    # Harvest
+    harvest = acres_to_farm * harvest_rate
+    wheat += harvest
+    print(f"Harvest rate: {harvest_rate} per acre, total harvested: {harvest}")
+
+    # Starvation
+    required_food = people * 20
+    if food_to_give < required_food:
+        starved = (required_food - food_to_give) // 20
+        starved = min(people, starved)
+        people -= starved
+        total_starved += starved
+        print(f"{starved} people starved.")
+        if starved > 0.45 * (people + starved):
+            print("More than 45% of the population starved. Game over.")
+            break
+    else:
+        print("No one starved.")
+
+    # Plague
+    if random.random() < 0.10:
+        plague_deaths = math.ceil(people * 0.4)
+        people -= plague_deaths
+        print(f"Plague hit! {plague_deaths} people died.")
+
+    # New citizens
+    new_people = random.randint (1, 10)
+    people += new_people
+    print(f"{new_people} people joined your city.")
+
+    # Rats
+    if random.random() < 0.10:
+        rats_ate = math.ceil(wheat * 0.25)
+        wheat -= rats_ate
+        print(f"Rats ate {rats_ate} bushels of wheat.")
+
+    # Extinction check
+    if people <= 0:
+        print("Everyone has died. Game over.")
+        break
+
+else:
+    print(f"\n--- End of Year 10 ---")
+    print(f"Final population: {people}")
+    print(f"Final land: {acres} acres")
+    print(f"Final wheat: {wheat} bushels")
+    print(f"Total starved: {total_starved}")
