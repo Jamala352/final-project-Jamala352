@@ -5,7 +5,6 @@ git commit -m "first commit"
 git branch -M main
 git remote add origin https://github.com/Clark-State-College-BAT-Division/final-project-Jamala352.git
 git push -u origin main
-
 import random
 import math
 
@@ -20,7 +19,7 @@ for year in range(1, rounds + 1):
     print(f"\n--- Year {year} ---")
     land_price = random.randint(17, 26)
     harvest_rate = random.randint(1, 4)
-    
+
     print(f"Population: {people}")
     print(f"Land: {acres} acres")
     print(f"Wheat: {wheat} bushels")
@@ -36,12 +35,12 @@ for year in range(1, rounds + 1):
                 break
             elif land_transaction < 0 and abs(land_transaction) <= acres:
                 acres += land_transaction
-                wheat -= land_transaction * land_price  # Selling gives wheat
+                wheat += abs(land_transaction) * land_price
                 break
             elif land_transaction == 0:
                 break
-        except:
-            pass
+        except ValueError:
+            print("Please enter a valid integer.")
         print("Invalid amount.")
 
     # Farming step
@@ -52,8 +51,8 @@ for year in range(1, rounds + 1):
             if 0 <= acres_to_farm <= max_farmable:
                 wheat -= acres_to_farm
                 break
-        except:
-            pass
+        except ValueError:
+            print("Please enter a valid integer.")
         print("Invalid amount.")
 
     # Food distribution
@@ -63,8 +62,8 @@ for year in range(1, rounds + 1):
             if 0 <= food_to_give <= wheat:
                 wheat -= food_to_give
                 break
-        except:
-            pass
+        except ValueError:
+            print("Please enter a valid integer.")
         print("Invalid amount.")
 
     # Harvest
@@ -91,9 +90,11 @@ for year in range(1, rounds + 1):
         plague_deaths = math.ceil(people * 0.4)
         people -= plague_deaths
         print(f"Plague hit! {plague_deaths} people died.")
+    else:
+        print("No plague this year.")
 
     # New citizens
-    new_people = random.randint (1, 10)
+    new_people = random.randint(1, 10)
     people += new_people
     print(f"{new_people} people joined your city.")
 
@@ -109,8 +110,10 @@ for year in range(1, rounds + 1):
         break
 
 else:
-    print(f"\n--- End of Year 10 ---")
+    print(f"\n--- End of Year {rounds} ---")
     print(f"Final population: {people}")
     print(f"Final land: {acres} acres")
     print(f"Final wheat: {wheat} bushels")
     print(f"Total starved: {total_starved}")
+    average_starved = total_starved / rounds
+    print(f"Average starved per year: {average_starved:.2f}")
